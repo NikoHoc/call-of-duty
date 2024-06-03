@@ -2,58 +2,81 @@ import * as THREE from "three";
 import { createMap } from './map.js';
 import { FreeCam } from './freeCam.js';
 
-// Setup canvas renderer
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-renderer.setClearColor(0x777777);
+class Main {
+  static init() {
+    var canvasRef = document.getElementById("canvas");
 
-// Setup scene and camera
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.set(0, 0, 10);
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
 
-// Setup free camera
-const freeCam = new FreeCam(camera, renderer.domElement);
+    this.camera.position.set(0, 0, 10);
 
-// Plane
-const plane = new THREE.Mesh(
-  new THREE.PlaneGeometry(40, 40),
-  new THREE.MeshPhongMaterial({ color: 0xa29979 })
-);
-scene.add(plane);
-plane.rotation.set(-Math.PI / 2, 0, 0);
-plane.position.set(0, -3, 0);
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      canvas: canvasRef,
+    });
 
-// Lights
-const ambientLight = new THREE.AmbientLight(0xFFFFFF);
-scene.add(ambientLight);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setClearColor(0x777777);
+    this.renderer.shadowMap.enabled = true;
+    document.body.appendChild(this.renderer.domElement);
 
-const hemisphereLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 0.1);
-scene.add(hemisphereLight);
+    // Setup free camera
+    this.freeCam = new FreeCam(this.camera, this.renderer.domElement);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
-directionalLight.position.set(3, 10, 10);
-directionalLight.target.position.set(0, 0, 0);
-scene.add(directionalLight);
-scene.add(directionalLight.target);
+    // Plane
+    var plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(40, 40),
+      new THREE.MeshPhongMaterial({ color: 0xa29979 })
+    );
 
-// Load the map
-createMap(scene);
+    plane.rotation.set(-Math.PI / 2, 0, 0);
+    plane.position.set(0, -3, 0);
+    plane.receiveShadow = true;
+    plane.castShadow = true;
+    this.scene.add(plane);
 
-// Loop Animate
-const clock = new THREE.Clock();
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF);
+    this.scene.add(ambientLight);
+
+    const hemisphereLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 0.1);
+    this.scene.add(hemisphereLight);
+
+    // Directional lighting
+    var directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.castShadow = true;
+    directionalLight.position.set(3, 10, 10);
+    directionalLight.target.position.set(0, 0, 0);
+    this.scene.add(directionalLight);
+    this.scene.add(directionalLight.target);
+
+    // Load the map
+    createMap(this.scene);
+  }
+
+  static render(dt) {
+    // Update any necessary animations or states
+    // For example: this.player.update(dt)
+
+    this.renderer.render(this.scene, this.camera);
+  }
+}
+
+var clock = new THREE.Clock();
+Main.init();
 
 function animate() {
   const delta = clock.getDelta();
-  freeCam.update(delta);
+  Main.freeCam.update(delta);
 
-  renderer.render(scene, camera);
+  Main.render(delta);
   requestAnimationFrame(animate);
 }
+
 requestAnimationFrame(animate);
