@@ -14,7 +14,7 @@ class Main {
       1000
     );
 
-    this.camera.position.set(0, 0, 10);
+    this.camera.position.set(0, 0, 2);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -27,7 +27,21 @@ class Main {
     document.body.appendChild(this.renderer.domElement);
 
     // Setup free camera
-    this.freeCam = new FreeCam(this.camera, this.renderer.domElement);
+    this.freeCam = new FreeCam(this.camera, this.scene, this.renderer.domElement);
+
+    // Pointer lock setup
+    this.domElement = this.renderer.domElement;
+    this.domElement.addEventListener('click', () => {
+      this.domElement.requestPointerLock();
+    });
+
+    document.addEventListener('pointerlockchange', () => {
+      if (document.pointerLockElement === this.domElement) {
+        this.freeCam.enable();
+      } else {
+        this.freeCam.disable();
+      }
+    });
 
     // Plane
     var plane = new THREE.Mesh(
@@ -61,9 +75,6 @@ class Main {
   }
 
   static render(dt) {
-    // Update any necessary animations or states
-    // For example: this.player.update(dt)
-
     this.renderer.render(this.scene, this.camera);
   }
 }
