@@ -12,6 +12,7 @@ Camera: 1 = FreeCam (WASD, QE), 2 = sceneCam1, 3 = sceneCam2, 4 = sceneCam3
 NOTE: juga perhatiin rubrik https://docs.google.com/spreadsheets/d/1JRIOTHHMH6L2lxS_MeSreq2OwxJVVn6J3AD9jrN0tYI/edit?usp=sharing
  - ENVIROMENT:
   -> tambah asset di map supaya kyk map asli (mobil tengah, bushes, etc)
+  -> collision
 
  - LIGHTING:
   -> street light
