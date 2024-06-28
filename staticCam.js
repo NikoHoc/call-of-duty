@@ -16,7 +16,10 @@ export class StaticCam {
 
     this.originalFOV = this.camera.fov;
     this.zoomedFOV = this.originalFOV / 2;
+    this.targetFOV = this.originalFOV;
     this.isZoomed = false;
+    this.zoomDuration = 0.5; // seconds
+    this.zoomProgress = 0;
   }
 
   enable() {
@@ -76,21 +79,35 @@ export class StaticCam {
 
   zoomIn() {
     if (!this.isZoomed) {
-      this.camera.fov = this.zoomedFOV;
-      this.camera.updateProjectionMatrix();
+      this.targetFOV = this.zoomedFOV;
+      this.zoomProgress = 0;
       this.isZoomed = true;
     }
   }
 
   zoomOut() {
     if (this.isZoomed) {
-      this.camera.fov = this.originalFOV;
-      this.camera.updateProjectionMatrix();
+      this.targetFOV = this.originalFOV;
+      this.zoomProgress = 0;
       this.isZoomed = false;
     }
   }
 
   update(delta) {
     if (!this.enabled) return;
+
+    // Smooth zoom logic
+    if (this.camera.fov !== this.targetFOV) {
+      this.zoomProgress += delta / this.zoomDuration;
+      if (this.zoomProgress > 1) this.zoomProgress = 1;
+
+      const newFOV = THREE.MathUtils.lerp(
+        this.camera.fov,
+        this.targetFOV,
+        this.zoomProgress
+      );
+      this.camera.fov = newFOV;
+      this.camera.updateProjectionMatrix();
+    }
   }
 }
