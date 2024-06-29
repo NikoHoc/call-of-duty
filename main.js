@@ -1,8 +1,10 @@
 import * as THREE from "three";
 import { loadFBXModel, loadOBJModel, setSkySphere } from "/enviroment.js";
+import { BasicCharacterController} from "./player.js";
 import { FreeCam } from "./freeCam.js";
 import { StaticCam } from "./staticCam.js";
 import { RotatingCam } from "./rotatingCam.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 /*
 Camera: 1 = FreeCam (WASD, QE), 2 3 4 = staticCam (shift = zoom in), 5 = rotatingCam
@@ -186,7 +188,7 @@ class Main {
       0.1,
       1000
     );
-    this.camera5.position.set(0, 200, 500); 
+    this.camera5.position.set(0, 200, 500);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -275,6 +277,60 @@ class Main {
     this.currentCamera = this.camera1;
     this.currentController = this.freeCam;
     this.enableCurrentCamera();
+
+    const fov = 60;
+    const aspect = 1920 / 1080;
+    const near = 1.0;
+    const far = 1000.0;
+    this._charCamera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    this._charCamera.position.set(25, 10, 25);
+
+    const controls = new OrbitControls(
+      this._charCamera, this.renderer.domElement);
+    controls.target.set(0, 10, 0);
+    controls.update();
+
+    this._mixers = [];
+    this._previousRAF = null;
+
+    this._LoadAnimatedModel();
+
+    this._RAF();
+  }
+
+  static _LoadAnimatedModel() {
+    const params = {
+      camera: this._charCamera,
+      scene: this.scene,
+      
+    };
+    this._controls = new BasicCharacterController(params);
+    
+  }
+
+  static _RAF() {
+    requestAnimationFrame((t) => {
+      if (this._previousRAF === null) {
+        this._previousRAF = t;
+      }
+
+      this._RAF();
+
+      this.renderer.render(this.scene, this._charCamera);
+      this._Step(t - this._previousRAF);
+      this._previousRAF = t;
+    });
+  }
+
+  static _Step(timeElapsed) {
+    const timeElapsedS = timeElapsed * 0.001;
+    if (this._mixers) {
+      this._mixers.map(m => m.update(timeElapsedS));
+    }
+
+    if (this._controls) {
+      this._controls.Update(timeElapsedS);
+    }
   }
 
   static enableCurrentCamera() {
