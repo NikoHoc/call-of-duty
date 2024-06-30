@@ -1,18 +1,17 @@
 import * as THREE from "three";
 import { loadFBXModel, loadOBJModel, setSkySphere } from "/enviroment.js";
-import { BasicCharacterController} from "./player.js";
 import { FreeCam } from "./freeCam.js";
 import { StaticCam } from "./staticCam.js";
 import { RotatingCam } from "./rotatingCam.js";
+import { CharacterControls } from "./player.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 /*
 Camera: 1 = FreeCam (WASD, QE), 2 3 4 = staticCam (shift = zoom in), 5 = rotatingCam
 
 ========= TODO =========
-NOTE: juga perhatiin rubrik https://docs.google.com/spreadsheets/d/1JRIOTHHMH6L2lxS_MeSreq2OwxJVVn6J3AD9jrN0tYI/edit?usp=sharing
- - ENVIROMENT:
-  -> tambah asset di map supaya kyk map asli (mobil tengah, bushes, etc)
+ - ENVIRONMENT:
   -> collision
 
  - LIGHTING:
@@ -21,173 +20,54 @@ NOTE: juga perhatiin rubrik https://docs.google.com/spreadsheets/d/1JRIOTHHMH6L2
   -> shadows
 
  - CHARACTER:
-  -> masukin char
+  -> insert character
   -> script
-  -> senjata
+  -> weapons
 
 - CAMERA
-  -> camera rotation muter" map??? (sesuai rubrik)
+  -> first person
+  -> third person
 ========= TODO =========
 */
 
 class Main {
+  static characterControls;
+
   static init() {
     var canvasRef = document.getElementById("canvas");
 
     this.scene = new THREE.Scene();
 
-    //
-    // Load enviroment
-    //
-    //load sky background
+    // Load environment
     setSkySphere(this.scene, "/resources/overcast_soil_puresky_2k.hdr");
 
-    //PARAMETER: scene, fbx path, scale = {x: 0.1, y: 0.1, z: 0.1}, position = {x: 0, y: 0, z: 0}, rotation = {x: 0, y: 0, z: 0}
-    // load map
     loadFBXModel(this.scene, "/resources/nuketown/source/NukeTown.fbx");
+    loadFBXModel(this.scene, "/resources/tesla-cybertruck/source/Cybertruck.fbx", { x: 0.06, y: 0.06, z: 0.06 }, { x: 100, y: 0, z: -37 });
+    loadFBXModel(this.scene, "/resources/war_car.fbx", undefined, { x: -105, y: 0, z: -70 });
+    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 150, y: 0, z: -15 }, { x: 4.7, y: 0, z: 1.9 });
+    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 140, y: 0, z: -60 }, { x: 4.7, y: 0, z: 1.9 });
+    loadFBXModel(this.scene, "resources/mini house/Stable.fbx", { x: 0.2, y: 0.2, z: 0.2 }, { x: -165, y: 0, z: 70 }, { x: 0, y: 2.3, z: 0 });
+    loadFBXModel(this.scene, "resources/trash-can/trash_can.fbx", { x: 0.086, y: 0.086, z: 0.086 }, { x: -190, y: 0, z: 0 }, { x: 0, y: 1.57, z: 0 });
+    loadOBJModel(this.scene, "resources/Bus/1376 Bus.obj", "resources/Bus/1376 Bus.mtl", { x: 0.4, y: 0.4, z: 0.4 }, { x: 40, y: 0, z: 20 }, { x: 0, y: 2.2, z: 0 });
+    loadFBXModel(this.scene, "resources/Cargo Train Container/CargoTrain_Container.fbx", { x: 0.1, y: 0.1, z: 0.1 }, { x: -35, y: 0, z: 0 }, { x: 0, y: 3.75, z: 0 });
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -50, y: 0, z: -200 }, { x: 0, y: 2.2, z: 0 });
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -48, y: 0, z: -190 }, { x: 0, y: 2.2, z: 0 });
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: -20, y: 0, z: -133 }, { x: 0, y: 2.2, z: 0 });
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: 32.5, y: 0, z: 110 });
 
-    // load tesla car
-    loadFBXModel(
-      this.scene,
-      "/resources/tesla-cybertruck/source/Cybertruck.fbx",
-      { x: 0.06, y: 0.06, z: 0.06 },
-      { x: 100, y: 0, z: -37 }
-    );
-
-    // load war car
-    loadFBXModel(this.scene, "/resources/war_car.fbx", undefined, {
-      x: -105,
-      y: 0,
-      z: -70,
-    });
-
-    // load barrier
-    loadFBXModel(
-      this.scene,
-      "/resources/metal-barrier/source/Metal Barrier.fbx",
-      undefined,
-      { x: 150, y: 0, z: -15 },
-      { x: 4.7, y: 0, z: 1.9 }
-    );
-    loadFBXModel(
-      this.scene,
-      "/resources/metal-barrier/source/Metal Barrier.fbx",
-      undefined,
-      { x: 140, y: 0, z: -60 },
-      { x: 4.7, y: 0, z: 1.9 }
-    );
-
-    // load garage
-    loadFBXModel(
-      this.scene,
-      "resources/mini house/Stable.fbx",
-      { x: 0.2, y: 0.2, z: 0.2 },
-      { x: -165, y: 0, z: 70 },
-      { x: 0, y: 2.3, z: 0 }
-    );
-
-    // load trash can
-    loadFBXModel(
-      this.scene,
-      "resources/trash-can/trash_can.fbx",
-      { x: 0.086, y: 0.086, z: 0.086 },
-      { x: -190, y: 0, z: 0 },
-      { x: 0, y: 1.57, z: 0 }
-    );
-
-    // load school bus
-    loadOBJModel(
-      this.scene,
-      "resources/Bus/1376 Bus.obj",
-      "resources/Bus/1376 Bus.mtl",
-      { x: 0.4, y: 0.4, z: 0.4 },
-      { x: 40, y: 0, z: 20 },
-      { x: 0, y: 2.2, z: 0 }
-    );
-
-    // load container
-    loadFBXModel(
-      this.scene,
-      "resources/Cargo Train Container/CargoTrain_Container.fbx",
-      { x: 0.1, y: 0.1, z: 0.1 },
-      { x: -35, y: 0, z: 0 },
-      { x: 0, y: 3.75, z: 0 }
-    );
-
-    // load bush
-    // 2 yellow house side bush
-    loadFBXModel(
-      this.scene,
-      "/resources/hedgee/source/Hedge.fbx",
-      { x: 2, y: 2, z: 2 },
-      { x: -50, y: 0, z: -200 },
-      { x: 0, y: 2.2, z: 0 }
-    );
-    loadFBXModel(
-      this.scene,
-      "/resources/hedgee/source/Hedge.fbx",
-      { x: 2, y: 2, z: 2 },
-      { x: -48, y: 0, z: -190 },
-      { x: 0, y: 2.2, z: 0 }
-    );
-
-    // yellow house front bush
-    loadFBXModel(
-      this.scene,
-      "/resources/hedgee/source/Hedge.fbx",
-      { x: 1.5, y: 1.5, z: 1.5 },
-      { x: -20, y: 0, z: -133 },
-      { x: 0, y: 2.2, z: 0 }
-    );
-    // green house front bush
-    loadFBXModel(
-      this.scene,
-      "/resources/hedgee/source/Hedge.fbx",
-      { x: 1.5, y: 1.5, z: 1.5 },
-      { x: 32.5, y: 0, z: 110 }
-    );
-    //
-    // Load enviroment
-    //
-
-    this.camera1 = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+    this.camera1 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera1.position.set(0, 50, 2);
 
-    this.camera2 = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+    this.camera2 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera2.position.set(100, 50, 350);
 
-    this.camera3 = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    this.camera3.position.set(-100, 50, -350);
+    this.camera3 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera3.position.set(0, 10, 10);
 
-    this.camera4 = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+    this.camera4 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera4.position.set(50, 20, 50);
 
-    this.camera5 = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+    this.camera5 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera5.position.set(0, 200, 500);
 
     this.renderer = new THREE.WebGLRenderer({
@@ -200,36 +80,10 @@ class Main {
     this.renderer.shadowMap.enabled = true;
     document.body.appendChild(this.renderer.domElement);
 
-    // Setup free camera
-    this.freeCam = new FreeCam(
-      this.camera1,
-      this.scene,
-      this.renderer.domElement
-    );
-
-    // Setup static camera
-    this.staticCam1 = new StaticCam(
-      this.camera2,
-      this.scene,
-      this.renderer.domElement
-    );
-    this.staticCam2 = new StaticCam(
-      this.camera3,
-      this.scene,
-      this.renderer.domElement
-    );
-    this.staticCam3 = new StaticCam(
-      this.camera4,
-      this.scene,
-      this.renderer.domElement
-    );
-
-    // Setup rotating camera
-    this.rotatingCam = new RotatingCam(
-      this.camera5,
-      this.scene,
-      this.renderer.domElement
-    );
+    this.freeCam = new FreeCam(this.camera1, this.scene, this.renderer.domElement);
+    this.staticCam1 = new StaticCam(this.camera2, this.scene, this.renderer.domElement);
+    this.staticCam3 = new StaticCam(this.camera4, this.scene, this.renderer.domElement);
+    this.rotatingCam = new RotatingCam(this.camera5, this.scene, this.renderer.domElement);
 
     this.domElement = this.renderer.domElement;
     this.domElement.addEventListener("click", () => {
@@ -246,26 +100,19 @@ class Main {
 
     document.addEventListener("keydown", this.onKeyDown.bind(this), false);
 
-    // Plane
-    var plane = new THREE.Mesh(
-      new THREE.PlaneGeometry(40, 40),
-      new THREE.MeshPhongMaterial({ color: 0xa29979 })
-    );
-
+    var plane = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshPhongMaterial({ color: 0xa29979 }));
     plane.rotation.set(-Math.PI / 2, 0, 0);
     plane.position.set(0, -3, 0);
     plane.receiveShadow = true;
     plane.castShadow = true;
     this.scene.add(plane);
 
-    // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff);
     this.scene.add(ambientLight);
 
     const hemisphereLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 0.1);
     this.scene.add(hemisphereLight);
 
-    // Directional lighting
     var directionalLight = new THREE.DirectionalLight(0xffffff);
     directionalLight.castShadow = true;
     directionalLight.position.set(3, 10, 10);
@@ -273,64 +120,28 @@ class Main {
     this.scene.add(directionalLight);
     this.scene.add(directionalLight.target);
 
-    // Set the current camera
     this.currentCamera = this.camera1;
     this.currentController = this.freeCam;
     this.enableCurrentCamera();
 
-    const fov = 60;
-    const aspect = 1920 / 1080;
-    const near = 1.0;
-    const far = 1000.0;
-    this._charCamera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    this._charCamera.position.set(25, 10, 25);
+    new GLTFLoader().load("/resources/Soldier.glb", (gltf) => {
+      const model = gltf.scene;
+      model.scale.set(8, 8, 8);
+      model.traverse((object) => {
+        if (object.isMesh) object.castShadow = true;
+      });
+      this.scene.add(model);
 
-    const controls = new OrbitControls(
-      this._charCamera, this.renderer.domElement);
-    controls.target.set(0, 10, 0);
-    controls.update();
+      const mixer = new THREE.AnimationMixer(model);
+      const animationsMap = new Map();
+      gltf.animations
+        .filter((a) => a.name !== "TPose")
+        .forEach((a) => {
+          animationsMap.set(a.name, mixer.clipAction(a));
+        });
 
-    this._mixers = [];
-    this._previousRAF = null;
-
-    this._LoadAnimatedModel();
-
-    this._RAF();
-  }
-
-  static _LoadAnimatedModel() {
-    const params = {
-      camera: this._charCamera,
-      scene: this.scene,
-      
-    };
-    this._controls = new BasicCharacterController(params);
-    
-  }
-
-  static _RAF() {
-    requestAnimationFrame((t) => {
-      if (this._previousRAF === null) {
-        this._previousRAF = t;
-      }
-
-      this._RAF();
-
-      this.renderer.render(this.scene, this._charCamera);
-      this._Step(t - this._previousRAF);
-      this._previousRAF = t;
+      Main.characterControls = new CharacterControls(model, mixer, animationsMap, this.camera3, "Idle");
     });
-  }
-
-  static _Step(timeElapsed) {
-    const timeElapsedS = timeElapsed * 0.001;
-    if (this._mixers) {
-      this._mixers.map(m => m.update(timeElapsedS));
-    }
-
-    if (this._controls) {
-      this._controls.Update(timeElapsedS);
-    }
   }
 
   static enableCurrentCamera() {
@@ -342,7 +153,6 @@ class Main {
   static disableAllCameras() {
     this.freeCam.disable();
     this.staticCam1.disable();
-    this.staticCam2.disable();
     this.staticCam3.disable();
     this.rotatingCam.disable();
   }
@@ -356,7 +166,9 @@ class Main {
         this.switchToCamera(this.camera2, this.staticCam1);
         break;
       case "Digit3":
-        this.switchToCamera(this.camera3, this.staticCam2);
+        if (Main.characterControls) {
+          this.switchToCamera(this.camera3, Main.characterControls);
+        }
         break;
       case "Digit4":
         this.switchToCamera(this.camera4, this.staticCam3);
@@ -386,9 +198,12 @@ function animate() {
   const delta = clock.getDelta();
   Main.freeCam.update(delta);
   Main.staticCam1.update(delta);
-  Main.staticCam2.update(delta);
   Main.staticCam3.update(delta);
   Main.rotatingCam.update(delta);
+
+  if (Main.currentController && Main.currentController.update) {
+    Main.currentController.update(delta);
+  }
 
   Main.render(delta);
   requestAnimationFrame(animate);
