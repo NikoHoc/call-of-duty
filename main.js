@@ -65,7 +65,7 @@ class Main {
     this.camera3.position.set(0, 10, 10);
 
     this.camera4 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera4.position.set(50, 20, 50);
+    this.camera4.position.set(100, 60, 30);
 
     this.camera5 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera5.position.set(0, 200, 500);
@@ -100,12 +100,19 @@ class Main {
 
     document.addEventListener("keydown", this.onKeyDown.bind(this), false);
 
-    var plane = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshPhongMaterial({ color: 0xa29979 }));
-    plane.rotation.set(-Math.PI / 2, 0, 0);
-    plane.position.set(0, -3, 0);
-    plane.receiveShadow = true;
-    plane.castShadow = true;
-    this.scene.add(plane);
+    var textureLoader = new THREE.TextureLoader();
+    var texture = textureLoader.load('resources/plane_texture/GroundGrassGreen002_COL_2K.jpg'); // Replace with the path to your texture image
+
+    // Set up circular plane with texture
+    var circle = new THREE.Mesh(
+      new THREE.CircleGeometry(1000, 500), // 500 is the radius, 32 is the number of segments
+      new THREE.MeshPhongMaterial({ map: texture })
+    );
+    circle.rotation.set(-Math.PI / 2, 0, 0);
+    circle.position.set(0, -1, 0);
+    circle.receiveShadow = true;
+    circle.castShadow = true;
+    this.scene.add(circle);
 
     const ambientLight = new THREE.AmbientLight(0xffffff);
     this.scene.add(ambientLight);
@@ -127,6 +134,7 @@ class Main {
     new GLTFLoader().load("/resources/Soldier.glb", (gltf) => {
       const model = gltf.scene;
       model.scale.set(8, 8, 8);
+      model.position.set(20, 0, 340)
       model.traverse((object) => {
         if (object.isMesh) object.castShadow = true;
       });
@@ -140,7 +148,13 @@ class Main {
           animationsMap.set(a.name, mixer.clipAction(a));
         });
 
-      Main.characterControls = new CharacterControls(model, mixer, animationsMap, this.camera3, "Idle");
+      Main.characterControls = new CharacterControls(
+        model,
+        mixer,
+        animationsMap,
+        this.camera3,
+        "Idle"
+      );
     });
   }
 
@@ -184,6 +198,13 @@ class Main {
     this.currentCamera = camera;
     this.currentController = controller;
     this.enableCurrentCamera();
+
+    if (
+      Main.characterControls &&
+      (camera === this.camera6 || camera === this.camera3)
+    ) {
+      Main.characterControls.setCamera(camera);
+    }
   }
 
   static render(dt) {
@@ -197,9 +218,9 @@ Main.init();
 function animate() {
   const delta = clock.getDelta();
 
-  if (Main.characterControls) {
-    Main.characterControls.update(delta); // Ensure character controls are always updated
-  }
+  // if (Main.characterControls) {
+  //   Main.characterControls.update(delta); // Ensure character controls are always updated
+  // }
 
   if (Main.currentController && Main.currentController.update) {
     Main.currentController.update(delta);
