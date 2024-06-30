@@ -1,5 +1,6 @@
 import * as THREE from "three";
 
+
 export class CharacterControls {
   constructor(model, mixer, animationsMap, camera, currentAction) {
     this.model = model;
@@ -9,7 +10,9 @@ export class CharacterControls {
     this.currentAction = currentAction;
     this.keysPressed = {};
     this.isMoving = false;
-    this.cameraOffset = new THREE.Vector3(0, 15, 30); // Fixed offset behind the player
+    this.BackCameraOffset = new THREE.Vector3(0, 15, 30); // CameraOffset behind the player
+    this.FrontCameraOffset = new THREE.Vector3(0, 15, -30); // CameraOffset in front of the player
+    this.cameraOffset = this.BackCameraOffset.clone(); // Default to behind player
     this.enabled = true;
 
     this.animationsMap.forEach((value, key) => {
@@ -20,6 +23,9 @@ export class CharacterControls {
 
     document.addEventListener("keydown", (event) => {
       this.keysPressed[event.code] = true;
+      if (event.code === "KeyF") {
+        this.toggleCameraView();
+      }
     });
 
     document.addEventListener("keyup", (event) => {
@@ -93,5 +99,13 @@ export class CharacterControls {
     this.camera.position.copy(this.model.position).add(offset);
     this.camera.lookAt(this.model.position);
   }
-}
 
+  toggleCameraView() {
+    if (this.cameraOffset.equals(this.BackCameraOffset)) {
+      this.cameraOffset.copy(this.FrontCameraOffset); // Switch to FrontCameraOffset
+    } else {
+      this.cameraOffset.copy(this.BackCameraOffset); // Switch to BackCameraOffset
+    }
+    this.updateCamera(); // Update the camera immediately after changing the offset
+  }
+}
