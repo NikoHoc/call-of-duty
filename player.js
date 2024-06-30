@@ -10,6 +10,7 @@ export class CharacterControls {
     this.keysPressed = {};
     this.isMoving = false;
     this.cameraOffset = new THREE.Vector3(0, 15, 30); // Fixed offset behind the player
+    this.enabled = true;
 
     this.animationsMap.forEach((value, key) => {
       if (key === this.currentAction) {
@@ -43,6 +44,8 @@ export class CharacterControls {
   }
 
   update(delta) {
+    if (!this.enabled) return;
+
     const direction = new THREE.Vector3();
     const frontVector = new THREE.Vector3(0, 0, -1).applyQuaternion(this.model.quaternion);
     const sideVector = new THREE.Vector3(1, 0, 0).applyQuaternion(this.model.quaternion);
@@ -84,9 +87,11 @@ export class CharacterControls {
 
     this.updateCamera();
   }
+
   updateCamera() {
     const offset = this.cameraOffset.clone().applyQuaternion(this.model.quaternion);
     this.camera.position.copy(this.model.position).add(offset);
     this.camera.lookAt(this.model.position);
   }
 }
+

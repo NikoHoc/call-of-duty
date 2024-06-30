@@ -31,11 +31,7 @@ export class StaticCam {
   }
 
   initEventListeners() {
-    this.domElement.addEventListener(
-      "mousemove",
-      this.onMouseMove.bind(this),
-      false
-    );
+    this.domElement.addEventListener("mousemove", this.onMouseMove.bind(this), false);
     document.addEventListener("keydown", this.onKeyDown.bind(this), false);
     document.addEventListener("keyup", this.onKeyUp.bind(this), false);
   }
@@ -66,13 +62,13 @@ export class StaticCam {
   }
 
   onKeyDown(event) {
-    if (event.key === "Shift") {
+    if (event.key === "q") {
       this.zoomIn();
     }
   }
 
   onKeyUp(event) {
-    if (event.key === "Shift") {
+    if (event.key === "q") {
       this.zoomOut();
     }
   }

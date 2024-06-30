@@ -196,10 +196,10 @@ Main.init();
 
 function animate() {
   const delta = clock.getDelta();
-  Main.freeCam.update(delta);
-  Main.staticCam1.update(delta);
-  Main.staticCam3.update(delta);
-  Main.rotatingCam.update(delta);
+
+  if (Main.characterControls) {
+    Main.characterControls.update(delta); // Ensure character controls are always updated
+  }
 
   if (Main.currentController && Main.currentController.update) {
     Main.currentController.update(delta);
