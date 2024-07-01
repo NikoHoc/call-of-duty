@@ -20,27 +20,39 @@ class Main {
     setSkySphere(this.scene, "/resources/overcast_soil_puresky_2k.hdr");
 
     loadFBXModel(this.scene, "/resources/nuketown/source/NukeTown.fbx");
-    loadFBXModel(this.scene, "/resources/tesla-cybertruck/source/Cybertruck.fbx", { x: 0.06, y: 0.06, z: 0.06 }, { x: 100, y: 0, z: -37 });
-    loadFBXModel(this.scene, "/resources/war_car.fbx", undefined, { x: -105, y: 0, z: -70 });
-    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 150, y: 0, z: -15 }, { x: 4.7, y: 0, z: 1.9 });
+    loadFBXModel(this.scene, "/resources/tesla-cybertruck/source/Cybertruck.fbx", { x: 0.06, y: 0.06, z: 0.06 }, { x: 100, y: 0, z: -37 }); //cybertruck
+    loadFBXModel(this.scene, "/resources/war_car.fbx", undefined, { x: -105, y: 0, z: -70 }); //war car
+    loadFBXModel(this.scene, "resources/Cargo Train Container/CargoTrain_Container.fbx", { x: 0.1, y: 0.1, z: 0.1 }, { x: -35, y: 0, z: 0 }, { x: 0, y: 3.75, z: 0 }); //cargo
+    loadOBJModel(this.scene, "resources/Bus/1376 Bus.obj", "resources/Bus/1376 Bus.mtl", { x: 0.4, y: 0.4, z: 0.4 }, { x: 40, y: 0, z: 20 }, { x: 0, y: 2.2, z: 0 }); //bus
+    loadFBXModel(this.scene, "resources/trash-can/trash_can.fbx", { x: 0.086, y: 0.086, z: 0.086 }, { x: -190, y: 0, z: 0 }, { x: 0, y: 1.57, z: 0 }); //trashcan
+    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 150, y: 0, z: -15 }, { x: 4.7, y: 0, z: 1.9 }); // metal barrier
     loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 140, y: 0, z: -60 }, { x: 4.7, y: 0, z: 1.9 });
-    loadFBXModel(this.scene, "resources/mini house/Stable.fbx", { x: 0.2, y: 0.2, z: 0.2 }, { x: -165, y: 0, z: 70 }, { x: 0, y: 2.3, z: 0 });
-    loadFBXModel(this.scene, "resources/trash-can/trash_can.fbx", { x: 0.086, y: 0.086, z: 0.086 }, { x: -190, y: 0, z: 0 }, { x: 0, y: 1.57, z: 0 });
-    loadOBJModel(this.scene, "resources/Bus/1376 Bus.obj", "resources/Bus/1376 Bus.mtl", { x: 0.4, y: 0.4, z: 0.4 }, { x: 40, y: 0, z: 20 }, { x: 0, y: 2.2, z: 0 });
-    loadFBXModel(this.scene, "resources/Cargo Train Container/CargoTrain_Container.fbx", { x: 0.1, y: 0.1, z: 0.1 }, { x: -35, y: 0, z: 0 }, { x: 0, y: 3.75, z: 0 });
-    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -50, y: 0, z: -200 }, { x: 0, y: 2.2, z: 0 });
+    loadFBXModel(this.scene, "resources/mini house/Stable.fbx", { x: 0.2, y: 0.2, z: 0.2 }, { x: -165, y: 0, z: 70 }, { x: 0, y: 2.3, z: 0 }); //mini house
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -50, y: 0, z: -200 }, { x: 0, y: 2.2, z: 0 }); 
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -48, y: 0, z: -190 }, { x: 0, y: 2.2, z: 0 });
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: -20, y: 0, z: -133 }, { x: 0, y: 2.2, z: 0 });
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: 32.5, y: 0, z: 110 });
 
     // // collision boxes
+    addCollisionBox(this.scene, { x: -10, y: 0, z: 190 }, { width: 90, height: 80, depth: 170 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //rumah ijo
+    addCollisionBox(this.scene, { x: 50, y: 0, z: 177 }, { width: 90, height: 50, depth: 55 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //garasi rumah ijo
+    addCollisionBox(this.scene, { x: -157, y: 0, z: 290 }, { width: 1, height: 20, depth: 250 }, 0x00ff00, true, { x: 0, y: 0.5, z: 0 }); //pagar dekat rumah ijo
+    addCollisionBox(this.scene, { x: 220, y: 0, z: 250 }, { width: 1, height: 20, depth: 370 }, 0x00ff00, true, { x: 0, y: 0.5, z: 0 }); //pagar dekat rumah ijo
+    addCollisionBox(this.scene, { x: -38, y: 0, z: 412 }, { width: 1, height: 20, depth: 120 }, 0x00ff00, true, { x: 0, y: 5, z: 0 }); //pagar dekat rumah ijo
+    addCollisionBox(this.scene, { x: 80, y: 0, z: 430 }, { width: 1, height: 20, depth: 120 }, 0x00ff00, true, { x: 0, y: 5, z: 0 }); //pagar dekat rumah ijo
+    addCollisionBox(this.scene, { x: 119, y: 0, z: 282 }, { width: 1, height: 20, depth: 43 }, 0x00ff00, true, { x: 0, y: 4, z: 0 }); //pagar dekat rumah ijo
+    addCollisionBox(this.scene, { x: 135, y: 0, z: 62 }, { width: 1, height: 20, depth: 85 }, 0x00ff00, true, { x: 0, y: 4, z: 0 }); //pagar dekat rumah ijo
+
+    addCollisionBox(this.scene, { x: -203, y: 0, z: 0 }, { width: 1, height: 15, depth: 160 }, 0x00ff00, true, { x: 0, y: 0.04, z: 0 }); //pagar
+
+    // addCollisionBox(this.scene, { x: 150, y: 0, z: -50 }, { width: 1, height: 20, depth: 100 }, 0x00ff00, true, { x: 1, y: 1, z: 1 }); //barrier
+
     addCollisionBox(this.scene, { x: 100, y: 0, z: -37 }, { width: 13, height: 25, depth: 35 }, 0xff0000, true); //cybertruck
     addCollisionBox(this.scene, { x: -105, y: 0, z: -70 }, { width: 15, height: 25, depth: 28 }, 0x00ff00, true); //war car
     addCollisionBox(this.scene, { x: -35, y: 0, z: 0 }, { width: 1, height: 50, depth: 76 }, 0x00ff00, true, { x: 0, y: 2.2, z: 0 }); //cargo
     addCollisionBox(this.scene, { x: 40, y: 0, z: 20 }, { width: 15, height: 40, depth: 50 }, 0x00ff00, true, { x: 0, y: 2.2, z: 0 }); //bus
     addCollisionBox(this.scene, { x: -190, y: 0, z: 0 }, { width: 15, height: 40, depth: 25 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //trashcan
-    addCollisionBox(this.scene, { x: -10, y: 0, z: 190 }, { width: 90, height: 80, depth: 170 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //rumah ijo
-    addCollisionBox(this.scene, { x: 50, y: 0, z: 177 }, { width: 90, height: 50, depth: 55 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //garasi rumah ijo
+
 
 
     this.camera1 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);

@@ -102,6 +102,8 @@ export function addCollisionBox(scene, position = { x: 0, y: 0, z: 0 }, size = {
   const box3 = new THREE.Box3().setFromObject(box);
   box.userData.boundingBox = box3;
 
+  //box3.translate(rotation)
+
   scene.add(box);
 
   if (visible) {
@@ -110,5 +112,5 @@ export function addCollisionBox(scene, position = { x: 0, y: 0, z: 0 }, size = {
   }
 
   box.updateMatrixWorld(); // Ensure matrix world is updated
-  box3.setFromObject(box); // Update bounding box based on the mesh's world matrix
+  box3.setFromObject(box, true); // Update bounding box based on the mesh's world matrix
 }
