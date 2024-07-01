@@ -1,8 +1,7 @@
 import * as THREE from "three";
 
-
 export class CharacterControls {
-  constructor(model, mixer, animationsMap, camera, currentAction) {
+  constructor(model, mixer, animationsMap, camera, currentAction, scene) {
     this.model = model;
     this.mixer = mixer;
     this.animationsMap = animationsMap;
@@ -10,6 +9,7 @@ export class CharacterControls {
     this.currentAction = currentAction;
     this.keysPressed = {};
     this.isMoving = false;
+    this.scene = scene; // Add scene to CharacterControls
     this.BackCameraOffset = new THREE.Vector3(0, 15, 30); // CameraOffset behind the player
     this.FrontCameraOffset = new THREE.Vector3(0, 15, -30); // CameraOffset in front of the player
     this.cameraOffset = this.BackCameraOffset.clone(); // Default to behind player
@@ -88,10 +88,36 @@ export class CharacterControls {
       this.switchAnimation("Idle");
     }
 
-    this.model.position.add(direction);
+    // cek collisions
+    if (
+      !this.checkCollisions(
+        direction
+          .clone()
+          .normalize()
+          .multiplyScalar(10 * delta)
+      )
+    ) {
+      this.model.position.add(direction);
+    }
+
     this.mixer.update(delta);
 
     this.updateCamera();
+  }
+
+  checkCollisions(newPosition) {
+    const futureBox = new THREE.Box3().setFromObject(this.model);
+    futureBox.translate(newPosition);
+
+    for (let object of this.scene.children) {
+      if (object.userData.boundingBox && object !== this.model) {
+        if (futureBox.intersectsBox(object.userData.boundingBox)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   updateCamera() {
@@ -102,10 +128,10 @@ export class CharacterControls {
 
   toggleCameraView() {
     if (this.cameraOffset.equals(this.BackCameraOffset)) {
-      this.cameraOffset.copy(this.FrontCameraOffset); // Switch to FrontCameraOffset
+      this.cameraOffset.copy(this.FrontCameraOffset);
     } else {
-      this.cameraOffset.copy(this.BackCameraOffset); // Switch to BackCameraOffset
+      this.cameraOffset.copy(this.BackCameraOffset);
     }
-    this.updateCamera(); // Update the camera immediately after changing the offset
+    this.updateCamera();
   }
 }

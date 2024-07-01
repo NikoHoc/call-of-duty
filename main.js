@@ -6,29 +6,7 @@ import { RotatingCam } from "./rotatingCam.js";
 import { CharacterControls } from "./player.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-
-/*
-Camera: 1 = FreeCam (WASD, QE), 2 3 4 = staticCam (shift = zoom in), 5 = rotatingCam
-
-========= TODO =========
- - ENVIRONMENT:
-  -> collision
-
- - LIGHTING:
-  -> street light
-  -> sun/moon
-  -> shadows
-
- - CHARACTER:
-  -> insert character
-  -> script
-  -> weapons
-
-- CAMERA
-  -> first person
-  -> third person
-========= TODO =========
-*/
+import { addCollisionBox } from "./enviroment.js";
 
 class Main {
   static characterControls;
@@ -54,6 +32,12 @@ class Main {
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -48, y: 0, z: -190 }, { x: 0, y: 2.2, z: 0 });
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: -20, y: 0, z: -133 }, { x: 0, y: 2.2, z: 0 });
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: 32.5, y: 0, z: 110 });
+
+    // // collision boxes
+    addCollisionBox(this.scene, { x: 100, y: 0, z: -37 }, { width: 13, height: 25, depth: 35 }, 0xff0000, true); //cybertruck
+    addCollisionBox(this.scene, { x: -105, y: 0, z: -70 }, { width: 15, height: 25, depth: 28 }, 0x00ff00, true); //war car
+    addCollisionBox(this.scene, { x: -35, y: 0, z: 0 }, { width: 1, height: 50, depth: 76 }, 0x00ff00, true, { x: 0, y: 2.2, z: 0 }); //cargo
+    addCollisionBox(this.scene, { x: 40, y: 0, z: 20 }, { width: 15, height: 40, depth: 50 }, 0x00ff00, true, { x: 0, y: 2.2, z: 0 }); //bus
 
     this.camera1 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera1.position.set(0, 50, 2);
@@ -101,7 +85,7 @@ class Main {
     document.addEventListener("keydown", this.onKeyDown.bind(this), false);
 
     var textureLoader = new THREE.TextureLoader();
-    var texture = textureLoader.load('resources/plane_texture/GroundGrassGreen002_COL_2K.jpg'); // Replace with the path to your texture image
+    var texture = textureLoader.load("resources/plane_texture/GroundGrassGreen002_COL_2K.jpg"); // Replace with the path to your texture image
 
     // Set up circular plane with texture
     var circle = new THREE.Mesh(
@@ -134,7 +118,8 @@ class Main {
     new GLTFLoader().load("/resources/Soldier.glb", (gltf) => {
       const model = gltf.scene;
       model.scale.set(8, 8, 8);
-      model.position.set(20, 0, 340)
+      // model.position.set(20, 0, 340);
+      model.position.set(80, 0, 0);
       model.traverse((object) => {
         if (object.isMesh) object.castShadow = true;
       });
@@ -153,7 +138,8 @@ class Main {
         mixer,
         animationsMap,
         this.camera3,
-        "Idle"
+        "Idle",
+        this.scene // Pass the scene to CharacterControls
       );
     });
   }
@@ -199,10 +185,7 @@ class Main {
     this.currentController = controller;
     this.enableCurrentCamera();
 
-    if (
-      Main.characterControls &&
-      (camera === this.camera6 || camera === this.camera3)
-    ) {
+    if (Main.characterControls && (camera === this.camera6 || camera === this.camera3)) {
       Main.characterControls.setCamera(camera);
     }
   }
