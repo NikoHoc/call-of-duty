@@ -38,6 +38,10 @@ class Main {
     addCollisionBox(this.scene, { x: -105, y: 0, z: -70 }, { width: 15, height: 25, depth: 28 }, 0x00ff00, true); //war car
     addCollisionBox(this.scene, { x: -35, y: 0, z: 0 }, { width: 1, height: 50, depth: 76 }, 0x00ff00, true, { x: 0, y: 2.2, z: 0 }); //cargo
     addCollisionBox(this.scene, { x: 40, y: 0, z: 20 }, { width: 15, height: 40, depth: 50 }, 0x00ff00, true, { x: 0, y: 2.2, z: 0 }); //bus
+    addCollisionBox(this.scene, { x: -190, y: 0, z: 0 }, { width: 15, height: 40, depth: 25 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //trashcan
+    addCollisionBox(this.scene, { x: -10, y: 0, z: 190 }, { width: 90, height: 80, depth: 170 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //rumah ijo
+    addCollisionBox(this.scene, { x: 50, y: 0, z: 177 }, { width: 90, height: 50, depth: 55 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //garasi rumah ijo
+
 
     this.camera1 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera1.position.set(0, 50, 2);
