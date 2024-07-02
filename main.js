@@ -16,45 +16,80 @@ class Main {
 
     this.scene = new THREE.Scene();
 
-    // Load environment
-    setSkySphere(this.scene, "/resources/overcast_soil_puresky_2k.hdr");
+    this.renderer = new THREE.WebGLRenderer({antialias: true,canvas: canvasRef,});
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setClearColor(0x777777);
+    this.renderer.shadowMap.enabled = true;
+    document.body.appendChild(this.renderer.domElement);
 
-    loadFBXModel(this.scene, "/resources/nuketown/source/NukeTown.fbx");
-    loadFBXModel(this.scene, "/resources/tesla-cybertruck/source/Cybertruck.fbx", { x: 0.06, y: 0.06, z: 0.06 }, { x: 100, y: 0, z: -37 }); //cybertruck
-    loadFBXModel(this.scene, "/resources/war_car.fbx", undefined, { x: -105, y: 0, z: -70 }); //war car
-    loadFBXModel(this.scene, "resources/Cargo Train Container/CargoTrain_Container.fbx", { x: 0.1, y: 0.1, z: 0.1 }, { x: -35, y: 0, z: 0 }, { x: 0, y: 3.75, z: 0 }); //cargo
-    loadOBJModel(this.scene, "resources/Bus/1376 Bus.obj", "resources/Bus/1376 Bus.mtl", { x: 0.4, y: 0.4, z: 0.4 }, { x: 40, y: 0, z: 20 }, { x: 0, y: 2.2, z: 0 }); //bus
-    loadFBXModel(this.scene, "resources/trash-can/trash_can.fbx", { x: 0.086, y: 0.086, z: 0.086 }, { x: -190, y: 0, z: 0 }, { x: 0, y: 1.57, z: 0 }); //trashcan
-    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 150, y: 0, z: -15 }, { x: 4.7, y: 0, z: 1.9 }); // metal barrier
-    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 140, y: 0, z: -60 }, { x: 4.7, y: 0, z: 1.9 });
-    loadFBXModel(this.scene, "resources/mini house/Stable.fbx", { x: 0.2, y: 0.2, z: 0.2 }, { x: -165, y: 0, z: 70 }, { x: 0, y: 2.3, z: 0 }); //mini house
-    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -50, y: 0, z: -200 }, { x: 0, y: 2.2, z: 0 }); 
-    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -48, y: 0, z: -190 }, { x: 0, y: 2.2, z: 0 });
-    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: -20, y: 0, z: -133 }, { x: 0, y: 2.2, z: 0 });
-    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: 32.5, y: 0, z: 110 });
+    //
+    // LOAD ENVIROMENT
+    //
+    setSkySphere(this.scene, "/resources/resting_place_2k.hdr"); // 
+    loadFBXModel(this.scene, "/resources/nuketown/source/NukeTown.fbx"); // Map
+    loadFBXModel(this.scene, "/resources/tesla-cybertruck/source/Cybertruck.fbx", { x: 0.06, y: 0.06, z: 0.06 }, { x: 100, y: 0, z: -37 }); // cybertruck
+    loadFBXModel(this.scene, "/resources/war_car.fbx", undefined, { x: -110, y: 0, z: -65 }); // war car
+    loadFBXModel(this.scene, "resources/Cargo Train Container/CargoTrain_Container.fbx", { x: 0.1, y: 0.1, z: 0.1 }, { x: -40, y: 0, z: -25 }, { x: 0, y: 0, z: 0 }); // cargo
+    loadOBJModel(this.scene, "resources/Bus/1376 Bus.obj", "resources/Bus/1376 Bus.mtl", { x: 0.4, y: 0.4, z: 0.4 }, { x: 55, y: 0, z: 20 }, { x: 0, y: 0, z: 0 }); // bus
+    loadFBXModel(this.scene, "resources/trash-can/trash_can.fbx", { x: 0.086, y: 0.086, z: 0.086 }, { x: -190, y: 0, z: 0 }, { x: 0, y: 1.57, z: 0 }); // trashcan
+    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 150, y: 0, z: -15 }, { x: 4.7, y: 0, z: 1.9 }); //  metal barrier
+    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 140, y: 0, z: -60 }, { x: 4.7, y: 0, z: 1.9 }); //  metal barrier
+    loadFBXModel(this.scene, "resources/mini house/Stable.fbx", { x: 0.2, y: 0.2, z: 0.2 }, { x: -165, y: 0, z: 70 }, { x: 0, y: 2.3, z: 0 }); // mini house
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -50, y: 0, z: -200 }, { x: 0, y: 2.2, z: 0 }); // bush
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -48, y: 0, z: -190 }, { x: 0, y: 2.2, z: 0 }); // bush
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: -20, y: 0, z: -133 }, { x: 0, y: 2.2, z: 0 }); // bush
+    loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: 32.5, y: 0, z: 110 }); // bush
+    //
+    // LOAD ENVIROMENT
+    //
 
-    // // collision boxes
-    addCollisionBox(this.scene, { x: -10, y: 0, z: 190 }, { width: 90, height: 80, depth: 170 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //rumah ijo
+    //
+    // COLLISION BOXES
+    //
+    // Rumah Hijau Collision
+    addCollisionBox(this.scene, { x: -10, y: 0, z: 177 }, { width: 90, height: 80, depth: 130 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //rumah ijo
     addCollisionBox(this.scene, { x: 50, y: 0, z: 177 }, { width: 90, height: 50, depth: 55 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //garasi rumah ijo
-    addCollisionBox(this.scene, { x: -157, y: 0, z: 290 }, { width: 1, height: 20, depth: 250 }, 0x00ff00, true, { x: 0, y: 0.5, z: 0 }); //pagar dekat rumah ijo
-    addCollisionBox(this.scene, { x: 220, y: 0, z: 250 }, { width: 1, height: 20, depth: 370 }, 0x00ff00, true, { x: 0, y: 0.5, z: 0 }); //pagar dekat rumah ijo
-    addCollisionBox(this.scene, { x: -38, y: 0, z: 412 }, { width: 1, height: 20, depth: 120 }, 0x00ff00, true, { x: 0, y: 5, z: 0 }); //pagar dekat rumah ijo
-    addCollisionBox(this.scene, { x: 80, y: 0, z: 430 }, { width: 1, height: 20, depth: 120 }, 0x00ff00, true, { x: 0, y: 5, z: 0 }); //pagar dekat rumah ijo
-    addCollisionBox(this.scene, { x: 119, y: 0, z: 282 }, { width: 1, height: 20, depth: 43 }, 0x00ff00, true, { x: 0, y: 4, z: 0 }); //pagar dekat rumah ijo
-    addCollisionBox(this.scene, { x: 135, y: 0, z: 62 }, { width: 1, height: 20, depth: 85 }, 0x00ff00, true, { x: 0, y: 4, z: 0 }); //pagar dekat rumah ijo
+    addCollisionBox(this.scene, { x: 24, y: 0, z: 105}, { width: 1, height: 40, depth: 15 }, 0xff0000, true, { x: 0, y: 0, z: 0 }); // pintu dpn rumah ijo
+    addCollisionBox(this.scene, { x: 28.5, y: 0, z: 109}, { width: 9, height: 20, depth: 16 }, 0xff0000, true, { x: 0, y: 0, z: 0 }); //bush rumah ijo
+    addCollisionBox(this.scene, { x: 33, y: 0, z: 261}, { width: 2.5, height: 40, depth: 2.5 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //tangga blkng rumah ijo
+    addCollisionBox(this.scene, { x: -36, y: 0, z: 280.5}, { width: 2.5, height: 40, depth: 2.5 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //tangga blkng rumah ijo
+    // Rumah Hijau Collision
 
-    addCollisionBox(this.scene, { x: -203, y: 0, z: 0 }, { width: 1, height: 15, depth: 160 }, 0x00ff00, true, { x: 0, y: 0.04, z: 0 }); //pagar
+    // Pagar Collision
+    addCollisionBox(this.scene, { x: -157, y: 0, z: 290 }, { width: 1, height: 20, depth: 250 }, 0x00ff00, true, { x: 0, y: 0.5, z: 0 });
+    addCollisionBox(this.scene, { x: 220, y: 0, z: 250 }, { width: 1, height: 20, depth: 370 }, 0x00ff00, true, { x: 0, y: 0.5, z: 0 });
+    addCollisionBox(this.scene, { x: -38, y: 0, z: 412 }, { width: 1, height: 20, depth: 120 }, 0x00ff00, true, { x: 0, y: 5, z: 0 });
+    addCollisionBox(this.scene, { x: 80, y: 0, z: 430 }, { width: 1, height: 20, depth: 120 }, 0x00ff00, true, { x: 0, y: 5, z: 0 }); 
+    addCollisionBox(this.scene, { x: 119, y: 0, z: 282 }, { width: 1, height: 20, depth: 43 }, 0x00ff00, true, { x: 0, y: 4, z: 0 }); 
+    addCollisionBox(this.scene, { x: 135, y: 0, z: 62 }, { width: 1, height: 20, depth: 85 }, 0x00ff00, true, { x: 0, y: 4, z: 0 }); 
+    
+    addCollisionBox(this.scene, { x: -203, y: 0, z: 0 }, { width: 1, height: 15, depth: 160 }, 0x00ff00, true, { x: 0, y: 0.04, z: 0 });
+    // Pagar Collision
 
-    // addCollisionBox(this.scene, { x: 150, y: 0, z: -50 }, { width: 1, height: 20, depth: 100 }, 0x00ff00, true, { x: 1, y: 1, z: 1 }); //barrier
+    //lampu Collision
+    addCollisionBox(this.scene, { x: 30, y: 0, z: 79}, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    addCollisionBox(this.scene, { x: -75, y: 0, z: 2.6 }, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    addCollisionBox(this.scene, { x: -48.45, y: 0, z: -55.58 }, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    addCollisionBox(this.scene, { x: 88.7, y: 0, z: 27.2}, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    addCollisionBox(this.scene, { x: 143.3, y: 0, z: 7.5}, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    addCollisionBox(this.scene, { x: 51.5, y: 0, z: -80.3}, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    addCollisionBox(this.scene, { x: 104.5, y: 0, z: -98.7}, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    //lampu Collision
 
-    addCollisionBox(this.scene, { x: 100, y: 0, z: -37 }, { width: 13, height: 25, depth: 35 }, 0xff0000, true); //cybertruck
-    addCollisionBox(this.scene, { x: -105, y: 0, z: -70 }, { width: 15, height: 25, depth: 28 }, 0x00ff00, true); //war car
-    addCollisionBox(this.scene, { x: -35, y: 0, z: 0 }, { width: 1, height: 50, depth: 76 }, 0x00ff00, true, { x: 0, y: 2.2, z: 0 }); //cargo
-    addCollisionBox(this.scene, { x: 40, y: 0, z: 20 }, { width: 15, height: 40, depth: 50 }, 0x00ff00, true, { x: 0, y: 2.2, z: 0 }); //bus
+    //addCollisionBox(this.scene, { x: -40, y: 0, z: 82}, { width: 5, height: 40, depth: 2 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); // papan nuketown
+
+    addCollisionBox(this.scene, { x: 100, y: 0, z: -37 }, { width: 13, height: 25, depth: 40 }, 0xff0000, true); //cybertruck
+    addCollisionBox(this.scene, { x: -110, y: 0, z: -65 }, { width: 12, height: 25, depth: 28 }, 0x00ff00, true); //war car
+    addCollisionBox(this.scene, { x: -40, y: 0, z: -25 }, { width: 89, height: 40, depth: 18 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //cargo
+    addCollisionBox(this.scene, { x: 55, y: 0, z: 20 }, { width: 15, height: 40, depth: 63 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //bus
     addCollisionBox(this.scene, { x: -190, y: 0, z: 0 }, { width: 15, height: 40, depth: 25 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); //trashcan
+    //
+    // COLLISION BOXES
+    //
 
-
-
+    //  
+    // CAMERA SETUP
+    //
     this.camera1 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera1.position.set(0, 50, 2);
 
@@ -70,20 +105,15 @@ class Main {
     this.camera5 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera5.position.set(0, 200, 500);
 
-    this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      canvas: canvasRef,
-    });
-
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setClearColor(0x777777);
-    this.renderer.shadowMap.enabled = true;
-    document.body.appendChild(this.renderer.domElement);
 
     this.freeCam = new FreeCam(this.camera1, this.scene, this.renderer.domElement);
     this.staticCam1 = new StaticCam(this.camera2, this.scene, this.renderer.domElement);
     this.staticCam3 = new StaticCam(this.camera4, this.scene, this.renderer.domElement);
     this.rotatingCam = new RotatingCam(this.camera5, this.scene, this.renderer.domElement);
+    //  
+    // CAMERA SETUP
+    //
+
 
     this.domElement = this.renderer.domElement;
     this.domElement.addEventListener("click", () => {
@@ -100,6 +130,9 @@ class Main {
 
     document.addEventListener("keydown", this.onKeyDown.bind(this), false);
 
+    //
+    // PLANE SETUP
+    //
     var textureLoader = new THREE.TextureLoader();
     var texture = textureLoader.load("resources/plane_texture/GroundGrassGreen002_COL_2K.jpg"); // Replace with the path to your texture image
 
@@ -113,20 +146,52 @@ class Main {
     circle.receiveShadow = true;
     circle.castShadow = true;
     this.scene.add(circle);
+    //
+    // PLANE SETUP
+    //
 
-    const ambientLight = new THREE.AmbientLight(0xffffff);
-    this.scene.add(ambientLight);
+    //
+    // LIGHTIHNG SETUP
+    //
+    // const ambientLight = new THREE.AmbientLight(0xffffff);
+    // this.scene.add(ambientLight);
 
-    const hemisphereLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 0.1);
-    this.scene.add(hemisphereLight);
+    // const hemisphereLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 0.1);
+    // this.scene.add(hemisphereLight);
 
-    var directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.castShadow = true;
-    directionalLight.position.set(3, 10, 10);
-    directionalLight.target.position.set(0, 0, 0);
-    this.scene.add(directionalLight);
-    this.scene.add(directionalLight.target);
+    // var directionalLight = new THREE.DirectionalLight(0xffffff);
+    // directionalLight.castShadow = true;
+    // directionalLight.position.set(3, 10, 10);
+    // directionalLight.target.position.set(0, 0, 0);
+    // this.scene.add(directionalLight);
+    // this.scene.add(directionalLight.target);
 
+
+    let light = new THREE.DirectionalLight(0xFFFFFF)
+    light.position.set(100, 100, 100)
+    light.target.position.set(0,0,0)
+    light.castShadow = true;
+    light.shadow.mapSize.width = 2048
+    light.shadow.mapSize.height = 2048
+    light.shadow.camera.near = 1
+    light.shadow.camera.far = 500
+    light.shadow.camera.left = 200
+    light.shadow.camera.right = -200
+    light.shadow.camera.top = 200
+    light.shadow.camera.bottom = -200
+    this.scene.add(light)
+
+    light = new THREE.AmbientLight(0x404040, 0.5)
+    this.scene.add(light)
+
+    
+    //
+    // LIGHTIHNG SETUP
+    //
+
+    //
+    // CHARACTER SETUP
+    //
     this.currentCamera = this.camera1;
     this.currentController = this.freeCam;
     this.enableCurrentCamera();
@@ -158,6 +223,9 @@ class Main {
         this.scene // Pass the scene to CharacterControls
       );
     });
+    //
+    // CHARACTER SETUP
+    //
   }
 
   static enableCurrentCamera() {
