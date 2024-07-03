@@ -34,8 +34,8 @@ class Main {
     loadFBXModel(this.scene, "resources/Cargo Train Container/CargoTrain_Container.fbx", { x: 0.1, y: 0.1, z: 0.1 }, { x: -40, y: 0, z: -25 }, { x: 0, y: 0, z: 0 }); // cargo
     loadOBJModel(this.scene, "resources/Bus/1376 Bus.obj", "resources/Bus/1376 Bus.mtl", { x: 0.4, y: 0.4, z: 0.4 }, { x: 55, y: 0, z: 20 }, { x: 0, y: 0, z: 0 }); // bus
     loadFBXModel(this.scene, "resources/trash-can/trash_can.fbx", { x: 0.086, y: 0.086, z: 0.086 }, { x: -190, y: 0, z: 0 }, { x: 0, y: 1.57, z: 0 }); // trashcan
-    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 150, y: 0, z: -15 }, { x: 4.7, y: 0, z: 1.9 }); //  metal barrier
-    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 140, y: 0, z: -60 }, { x: 4.7, y: 0, z: 1.9 }); //  metal barrier
+    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 145, y: 0, z: -15 }, { x: 4.7, y: 0, z: 1.65 }); //  metal barrier
+    loadFBXModel(this.scene, "/resources/metal-barrier/source/Metal Barrier.fbx", undefined, { x: 135, y: 0, z: -60 }, { x: 4.7, y: 0, z: 1.65 }); //  metal barrier
     loadFBXModel(this.scene, "resources/mini house/Stable.fbx", { x: 0.2, y: 0.2, z: 0.2 }, { x: -165, y: 0, z: 70 }, { x: 0, y: 2.3, z: 0 }); // mini house
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -50, y: 0, z: -200 }, { x: 0, y: 2.2, z: 0 }); // bush
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -48, y: 0, z: -190 }, { x: 0, y: 2.2, z: 0 }); // bush
@@ -77,6 +77,12 @@ class Main {
     addCollisionBox(this.scene, { x: 51.5, y: 0, z: -80.3}, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
     addCollisionBox(this.scene, { x: 104.5, y: 0, z: -98.7}, { width: 1, height: 40, depth: 1 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
     //lampu Collision
+
+    // barrier collision
+    addCollisionBox(this.scene, { x: 148, y: 0, z: -15 }, { width: 1, height: 20, depth: 50 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    addCollisionBox(this.scene, { x: 137, y: 0, z: -75 }, { width: 1, height: 20, depth: 50 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    addCollisionBox(this.scene, { x: 142, y: 0, z: -65 }, { width: 1, height: 20, depth: 50 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); 
+    // barrier collision
 
     //addCollisionBox(this.scene, { x: -40, y: 0, z: 82}, { width: 5, height: 40, depth: 2 }, 0x00ff00, true, { x: 0, y: 0, z: 0 }); // papan nuketown
 
@@ -178,17 +184,17 @@ class Main {
     this.scene.add(directionalLight);
     this.scene.add(directionalLight.target);
 
-    //Lighting lampu jalan
-    this.createStreetLight(this.scene, { x: 30, y: 24, z: 79 });
-    this.createStreetLight(this.scene, { x: -75, y: 24, z: 2.6 });
-    this.createStreetLight(this.scene, { x: -48.45, y: 24, z: -55.58 });
-    this.createStreetLight(this.scene, { x: 88.7, y: 24, z: 27.2 });
-    this.createStreetLight(this.scene, { x: 143.3, y: 24, z: 7.5 });
-    //this.createStreetLight(this.scene, { x: 51.5, y: 24, z: -80.3 });
-    this.createStreetLight(this.scene, { x: 104.5, y: 24, z: -98.7 });
+    // //Lighting lampu jalan
+    // this.createStreetLight(this.scene, { x: 30, y: 24, z: 79 });
+    // this.createStreetLight(this.scene, { x: -75, y: 24, z: 2.6 });
+    // this.createStreetLight(this.scene, { x: -48.45, y: 24, z: -55.58 });
+    // this.createStreetLight(this.scene, { x: 88.7, y: 24, z: 27.2 });
+    // this.createStreetLight(this.scene, { x: 143.3, y: 24, z: 7.5 });
+    // this.createStreetLight(this.scene, { x: 51.5, y: 24, z: -80.3 });
+    // this.createStreetLight(this.scene, { x: 104.5, y: 24, z: -98.7 });
 
-    this.createStreetLight(this.scene, { x: -40, y: 28, z: 85 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
-    this.createStreetLight(this.scene, { x: -67.7, y: 28, z: 71 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
+    // this.createStreetLight(this.scene, { x: -40, y: 28, z: 85 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
+    // this.createStreetLight(this.scene, { x: -67.7, y: 28, z: 71 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
    
     //
     // LIGHTIHNG SETUP
