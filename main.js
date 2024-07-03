@@ -196,8 +196,6 @@ class Main {
 
     //Lighting lampu jalan
 
-    this.scene.add( spotLight );
-
     // this.createStreetLight(this.scene, { x: 30, y: 24, z: 79 });
     // this.createStreetLight(this.scene, { x: -75, y: 24, z: 2.6 });
     // this.createStreetLight(this.scene, { x: -48.45, y: 24, z: -55.58 });
