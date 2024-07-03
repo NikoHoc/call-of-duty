@@ -7,12 +7,6 @@ import { CharacterControls } from "./player.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { addCollisionBox } from "./enviroment.js";
 
-import Stats from 'three/addons/libs/stats.module.js';
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-
-import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
-import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
-
 class Main {
   static characterControls;
 
@@ -195,7 +189,6 @@ class Main {
     this.scene.add(directionalLight.target);
 
     //Lighting lampu jalan
-
     // this.createStreetLight(this.scene, { x: 30, y: 24, z: 79 });
     // this.createStreetLight(this.scene, { x: -75, y: 24, z: 2.6 });
     // this.createStreetLight(this.scene, { x: -48.45, y: 24, z: -55.58 });
@@ -207,6 +200,16 @@ class Main {
     // this.createStreetLight(this.scene, { x: -40, y: 28, z: 85 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
     // this.createStreetLight(this.scene, { x: -67.7, y: 28, z: 71 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
    
+    const geometry = new THREE.BoxGeometry( 1, 12, 15 );  
+    const material = new THREE.MeshPhysicalMaterial({  
+      roughness: 0.1,  
+      transmission: 1, // Add transparency
+      thickness: 0.5, // Add refraction!
+    });
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.position.set(0, 10, 0)
+    this.scene.add(mesh);
+
     //
     // LIGHTIHNG SETUP
     //
