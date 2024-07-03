@@ -5,8 +5,10 @@ import { StaticCam } from "./staticCam.js";
 import { RotatingCam } from "./rotatingCam.js";
 import { CharacterControls } from "./player.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { addCollisionBox } from "./enviroment.js";
+
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 
 class Main {
   static characterControls;
@@ -153,38 +155,41 @@ class Main {
     //
     // LIGHTIHNG SETUP
     //
-    // const ambientLight = new THREE.AmbientLight(0xffffff);
-    // this.scene.add(ambientLight);
+    const ambientLight = new THREE.AmbientLight(0xffffff);
+    this.scene.add(ambientLight);
 
-    // const hemisphereLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 0.1);
-    // this.scene.add(hemisphereLight);
+    const hemisphereLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 0.1);
+    this.scene.add(hemisphereLight);
 
-    // var directionalLight = new THREE.DirectionalLight(0xffffff);
-    // directionalLight.castShadow = true;
-    // directionalLight.position.set(3, 10, 10);
-    // directionalLight.target.position.set(0, 0, 0);
-    // this.scene.add(directionalLight);
-    // this.scene.add(directionalLight.target);
+    var directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.position.set(100, 100, -80);
+    directionalLight.target.position.set(0, 0, 0);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 4096
+    directionalLight.shadow.mapSize.height = 4096
+    directionalLight.shadow.camera.near = 1
+    directionalLight.shadow.camera.far = 1000
+    directionalLight.shadow.camera.left = 300
+    directionalLight.shadow.camera.right = -300
+    directionalLight.shadow.camera.top = 300
+    directionalLight.shadow.camera.bottom = -300
+    const helper = new THREE.DirectionalLightHelper( directionalLight, 5 );
+    this.scene.add( helper );
+    this.scene.add(directionalLight);
+    this.scene.add(directionalLight.target);
 
+    //Lighting lampu jalan
+    this.createStreetLight(this.scene, { x: 30, y: 24, z: 79 });
+    this.createStreetLight(this.scene, { x: -75, y: 24, z: 2.6 });
+    this.createStreetLight(this.scene, { x: -48.45, y: 24, z: -55.58 });
+    this.createStreetLight(this.scene, { x: 88.7, y: 24, z: 27.2 });
+    this.createStreetLight(this.scene, { x: 143.3, y: 24, z: 7.5 });
+    //this.createStreetLight(this.scene, { x: 51.5, y: 24, z: -80.3 });
+    this.createStreetLight(this.scene, { x: 104.5, y: 24, z: -98.7 });
 
-    let light = new THREE.DirectionalLight(0xFFFFFF)
-    light.position.set(100, 100, 100)
-    light.target.position.set(0,0,0)
-    light.castShadow = true;
-    light.shadow.mapSize.width = 2048
-    light.shadow.mapSize.height = 2048
-    light.shadow.camera.near = 1
-    light.shadow.camera.far = 500
-    light.shadow.camera.left = 200
-    light.shadow.camera.right = -200
-    light.shadow.camera.top = 200
-    light.shadow.camera.bottom = -200
-    this.scene.add(light)
-
-    light = new THREE.AmbientLight(0x404040, 0.5)
-    this.scene.add(light)
-
-    
+    this.createStreetLight(this.scene, { x: -40, y: 28, z: 85 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
+    this.createStreetLight(this.scene, { x: -67.7, y: 28, z: 71 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
+   
     //
     // LIGHTIHNG SETUP
     //
@@ -226,6 +231,29 @@ class Main {
     //
     // CHARACTER SETUP
     //
+  }
+
+  static createStreetLight(scene, position, sphereSize = { radius: 1, widthSegments: 16, heightSegments: 8 }) {
+    const { radius, widthSegments, heightSegments } = sphereSize;
+  
+    const bulbGeometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+    const bulbLight = new THREE.PointLight(0xffffff, 2, 100, 2);
+    const bulbMat = new THREE.MeshStandardMaterial({
+      emissive: 0xffffee,
+      emissiveIntensity: 1,
+      color: 0x000000,
+    });
+    const bulbMesh = new THREE.Mesh(bulbGeometry, bulbMat);
+  
+    bulbLight.add(bulbMesh);
+    bulbLight.position.set(position.x, position.y, position.z);
+    bulbLight.castShadow = true;
+  
+    // Adjust the light intensity and power if needed
+    bulbLight.intensity = 10;
+    bulbLight.power = 400;
+  
+    scene.add(bulbLight);
   }
 
   static enableCurrentCamera() {
@@ -275,6 +303,9 @@ class Main {
   }
 
   static render(dt) {
+    // const time = Date.now() * 0.0005;
+    // this.bulbLight.position.y = Math.cos(time) * 0.75 + 1.25;
+
     this.renderer.render(this.scene, this.currentCamera);
   }
 }
