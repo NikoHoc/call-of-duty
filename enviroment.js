@@ -93,7 +93,7 @@ export function loadOBJModel(scene, objPath, mtlPath, scale = { x: 0.1, y: 0.1, 
 
 export function addCollisionBox(scene, position = { x: 0, y: 0, z: 0 }, size = { width: 1, height: 1, depth: 1 }, color = 0xff0000, visible = true, rotation = { x: 0, y: 0, z: 0 }) {
   const geometry = new THREE.BoxGeometry(size.width, size.height, size.depth);
-  const material = new THREE.MeshBasicMaterial({ color: color, visible: visible });
+  const material = new THREE.MeshBasicMaterial({ color: color, visible: false }); // ubah ke true jika ingin lihat box collision
   const box = new THREE.Mesh(geometry, material);
 
   box.position.set(position.x, position.y, position.z);
@@ -102,11 +102,9 @@ export function addCollisionBox(scene, position = { x: 0, y: 0, z: 0 }, size = {
   const box3 = new THREE.Box3().setFromObject(box);
   box.userData.boundingBox = box3;
 
-  //box3.translate(rotation)
-
   scene.add(box);
 
-  if (visible) {
+  if (!visible) { // ubah ke visible jika ingin liat box helper
     const boxHelper = new THREE.Box3Helper(box3, color);
     scene.add(boxHelper);
   }

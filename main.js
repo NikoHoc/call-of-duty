@@ -7,6 +7,9 @@ import { CharacterControls } from "./player.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { addCollisionBox } from "./enviroment.js";
 
+import Stats from 'three/addons/libs/stats.module.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 
@@ -164,15 +167,22 @@ class Main {
     const ambientLight = new THREE.AmbientLight(0xffffff);
     this.scene.add(ambientLight);
 
-    const hemisphereLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 0.1);
-    this.scene.add(hemisphereLight);
+    const hemiLight = new THREE.HemisphereLight( 0xb1e1ff, 0xb97a20, 0.2 );
+		hemiLight.color.setHSL( 0.2, 1, 0.6 );
+		hemiLight.groundColor.setHSL( 0.1, 1, 0.75 );
+		hemiLight.position.set( 0, 50, 0 );
+		this.scene.add( hemiLight );
 
-    var directionalLight = new THREE.DirectionalLight(0xffffff);
+		// const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
+		// this.scene.add( hemiLightHelper );
+
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    directionalLight.color.setHSL( 0.1, 1, 0.95 );
     directionalLight.position.set(100, 100, -80);
     directionalLight.target.position.set(0, 0, 0);
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 4096
-    directionalLight.shadow.mapSize.height = 4096
+    directionalLight.shadow.mapSize.width = 8000
+    directionalLight.shadow.mapSize.height = 5000
     directionalLight.shadow.camera.near = 1
     directionalLight.shadow.camera.far = 1000
     directionalLight.shadow.camera.left = 300
@@ -184,7 +194,10 @@ class Main {
     this.scene.add(directionalLight);
     this.scene.add(directionalLight.target);
 
-    // //Lighting lampu jalan
+    //Lighting lampu jalan
+
+    this.scene.add( spotLight );
+
     // this.createStreetLight(this.scene, { x: 30, y: 24, z: 79 });
     // this.createStreetLight(this.scene, { x: -75, y: 24, z: 2.6 });
     // this.createStreetLight(this.scene, { x: -48.45, y: 24, z: -55.58 });
