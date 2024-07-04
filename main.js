@@ -38,6 +38,7 @@ class Main {
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 2, y: 2, z: 2 }, { x: -48, y: 0, z: -190 }, { x: 0, y: 2.2, z: 0 }); // bush
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: -20, y: 0, z: -133 }, { x: 0, y: 2.2, z: 0 }); // bush
     loadFBXModel(this.scene, "/resources/hedgee/source/Hedge.fbx", { x: 1.5, y: 1.5, z: 1.5 }, { x: 32.5, y: 0, z: 110 }); // bush
+    loadFBXModel(this.scene, "/resources/Horse Statue/Statue_Horse.fbx", { x: 0.06, y: 0.06, z: 0.06 }, { x: -110, y: 0, z: 62 }, { x: 0, y: 1.9, z: 0 }) // statue kuda
     //
     // LOAD ENVIROMENT
     //
@@ -200,15 +201,18 @@ class Main {
     // this.createStreetLight(this.scene, { x: -40, y: 28, z: 85 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
     // this.createStreetLight(this.scene, { x: -67.7, y: 28, z: 71 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
    
-    const geometry = new THREE.BoxGeometry( 1, 12, 15 );  
+    // TRANSPARANCY
+    const geometry = new THREE.BoxGeometry( 14, 24, 23 );  
     const material = new THREE.MeshPhysicalMaterial({  
-      roughness: 0.1,  
+      roughness: 0.15,  
       transmission: 1, // Add transparency
-      thickness: 0.5, // Add refraction!
+      thickness: 0.1, // Add refraction!
     });
     const mesh = new THREE.Mesh(geometry, material)
-    mesh.position.set(0, 10, 0)
+    mesh.position.set(-77, 26, 50)
+    mesh.rotation.set(0, 1.875, 0)
     this.scene.add(mesh);
+    // TRANSPARANCY
 
     //
     // LIGHTIHNG SETUP
