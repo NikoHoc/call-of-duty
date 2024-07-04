@@ -167,7 +167,6 @@ class Main {
 		hemiLight.groundColor.setHSL( 0.1, 1, 0.75 );
 		hemiLight.position.set( 0, 50, 0 );
 		this.scene.add( hemiLight );
-
 		// const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
 		// this.scene.add( hemiLightHelper );
 
@@ -184,22 +183,22 @@ class Main {
     directionalLight.shadow.camera.right = -300
     directionalLight.shadow.camera.top = 300
     directionalLight.shadow.camera.bottom = -300
-    const helper = new THREE.DirectionalLightHelper( directionalLight, 5 );
-    this.scene.add( helper );
+    // const helper = new THREE.DirectionalLightHelper( directionalLight, 5 );
+    // this.scene.add( helper );
     this.scene.add(directionalLight);
     this.scene.add(directionalLight.target);
 
     //Lighting lampu jalan
-    // this.createStreetLight(this.scene, { x: 30, y: 24, z: 79 });
-    // this.createStreetLight(this.scene, { x: -75, y: 24, z: 2.6 });
-    // this.createStreetLight(this.scene, { x: -48.45, y: 24, z: -55.58 });
-    // this.createStreetLight(this.scene, { x: 88.7, y: 24, z: 27.2 });
-    // this.createStreetLight(this.scene, { x: 143.3, y: 24, z: 7.5 });
-    // this.createStreetLight(this.scene, { x: 51.5, y: 24, z: -80.3 });
-    // this.createStreetLight(this.scene, { x: 104.5, y: 24, z: -98.7 });
+    this.createStreetLight(this.scene, { x: 30, y: 24, z: 79 });
+    this.createStreetLight(this.scene, { x: -75, y: 24, z: 2.6 });
+    this.createStreetLight(this.scene, { x: -48.45, y: 24, z: -55.58 });
+    this.createStreetLight(this.scene, { x: 88.7, y: 24, z: 27.2 });
+    this.createStreetLight(this.scene, { x: 143.3, y: 24, z: 7.5 });
+    this.createStreetLight(this.scene, { x: 51.5, y: 24, z: -80.3 });
+    this.createStreetLight(this.scene, { x: 104.5, y: 24, z: -98.7 });
 
-    // this.createStreetLight(this.scene, { x: -40, y: 28, z: 85 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
-    // this.createStreetLight(this.scene, { x: -67.7, y: 28, z: 71 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
+    this.createStreetLight(this.scene, { x: -40, y: 28, z: 85 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
+    this.createStreetLight(this.scene, { x: -67.7, y: 28, z: 71 }, { radius: 3, widthSegments: 24, heightSegments: 12 }); // sign nuketown
    
     // TRANSPARANCY
     const geometry = new THREE.BoxGeometry( 14, 24, 23 );  
@@ -213,6 +212,37 @@ class Main {
     mesh.rotation.set(0, 1.875, 0)
     this.scene.add(mesh);
     // TRANSPARANCY
+
+    // const distance = 50.0;
+    // const angle = Math.PI / 4.0;
+    // const penumbra = 0.05;
+    // const decay = 1.0;
+
+    // const spotLight = new THREE.SpotLight(0xff8080, 1.0, distance, angle, penumbra, decay);
+    // spotLight.position.set( 55, 10, 50);
+    // spotLight.target.position.set(55,10, 50);
+
+    // spotLight.castShadow = true;
+
+    // spotLight.shadow.mapSize.width = 4096
+    // spotLight.shadow.mapSize.height = 4096
+    // spotLight.shadow.camera.near = 1
+    // spotLight.shadow.camera.far = 1000
+    // spotLight.shadow.camera.fov = 30
+
+    // const helperSpot = new THREE.SpotLightHelper( spotLight, 5 );
+
+    // this.scene.add(spotLight);
+    // this.scene.add( helperSpot );
+    // this.scene.add(spotLight.target);
+
+    // const lightPoint = new THREE.PointLight( 0xffffff, 1, 100 ); 
+    // lightPoint.position.set( 55, 10, 50 ); 
+    // this.scene.add( lightPoint );
+
+    // const sphereSize = 1;
+    // const pointLightHelper = new THREE.PointLightHelper( lightPoint, sphereSize );
+    // this.scene.add( pointLightHelper ); 
 
     //
     // LIGHTIHNG SETUP
